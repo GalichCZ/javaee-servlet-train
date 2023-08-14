@@ -1,8 +1,6 @@
 package org.Servlets;
 import org.DTO.UserDto;
 import org.Provider.JsonProvider;
-import org.Services.UserServiceImpl;
-import org.Utils.ErrorHandler;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+
+import static org.Services.UserServiceImpl.getExactAmountOfUsers;
+import static org.Utils.ErrorHandler.badRequest;
 
 @WebServlet(value = "/users")
 public class GetUsers extends HttpServlet {
@@ -20,17 +21,17 @@ public class GetUsers extends HttpServlet {
             int offset = Integer.parseInt(request.getParameter("offset"));
             int limit = Integer.parseInt(request.getParameter("limit"));
 
-            List<UserDto> userDtos = UserServiceImpl.getExactAmountOfUsers(offset, limit);
+            List<UserDto> userDtos = getExactAmountOfUsers(offset, limit);
 
             if(userDtos == null){
-                ErrorHandler.badRequest(response, "Cannot get users");
+                badRequest(response, "Cannot get users");
                 return;
             }
 
             response.getWriter().write(JsonProvider.objectToString(userDtos));
         }
         catch (Exception e) {
-            ErrorHandler.badRequest(response, e.getMessage());
+            badRequest(response, e.getMessage());
         }
     }
 }

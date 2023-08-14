@@ -2,32 +2,31 @@ package org.Entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Email;
 
 @Entity
 @Table(name = "USERS")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("id")
     private long id;
-    @JsonProperty("username")
+    @NotNull
     private String username;
-    @JsonProperty("password")
+    @NotNull
     private String password;
-    @JsonProperty("name")
+    @NotNull
     private String name;
-    @JsonProperty("email")
+    @Email
+    @NotNull
     private String email;
-    @JsonProperty("gender")
     private String gender;
-    @JsonProperty("phone")
     private String phone;
-    @JsonProperty("cell")
     private String cell;
-    @JsonProperty("city")
-    private String city;
-    @JsonProperty("country")
-    private String country;
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
+
 
     public long getId() {
         return id;
@@ -61,16 +60,13 @@ public class User {
         return cell;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public String getCountry() {
-        return country;
-    }
 
     public User(String username, String password, String name, String email,
-                String gender, String phone, String cell, String city, String country) {
+                String gender, String phone, String cell, City city) {
         this.username = username;
         this.password = password;
         this.name = name;
@@ -79,7 +75,6 @@ public class User {
         this.phone = phone;
         this.cell = cell;
         this.city = city;
-        this.country = country;
     }
 
     public User() {

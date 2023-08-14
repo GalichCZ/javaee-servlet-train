@@ -1,15 +1,13 @@
 package org.Servlets;
-
 import org.DTO.UserDto;
 import org.Provider.JsonProvider;
-import org.Services.UserServiceImpl;
-import org.Utils.ErrorHandler;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import static org.Services.UserServiceImpl.getSpecificUser;
+import static org.Utils.ErrorHandler.badRequest;
 
 @WebServlet(value = "/user")
 public class GetSpecificUser extends HttpServlet {
@@ -23,16 +21,16 @@ public class GetSpecificUser extends HttpServlet {
 
             long userId = Long.parseLong(request.getParameter("id"));
 
-            UserDto userDto = UserServiceImpl.getSpecificUser(includedFields, userId);
+            UserDto userDto = getSpecificUser(includedFields, userId);
 
             if(userDto == null){
-                ErrorHandler.badRequest(response, "Cannot get specific user");
+                badRequest(response, "Cannot get specific user");
                 return;
             }
 
             response.getWriter().write(JsonProvider.objectToString(userDto));
         }catch (Exception e){
-            ErrorHandler.badRequest(response, e.getMessage());
+            badRequest(response, e.getMessage());
         }
     }
 }

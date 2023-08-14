@@ -11,7 +11,7 @@ public class RandomUsersGetter {
         is like show that I understand "pure" Java :D
     */
     public static String getRandomUsersFromApi() {
-        String apiUrl = "https://randomuser.me/api/?results=10&inc=name,location,email,login,phone,cell,gender&nat=US";
+        String apiUrl = "https://randomuser.me/api/?results=10&inc=name,location,email,login,phone,cell,gender";
         try {
             URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

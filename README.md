@@ -1,7 +1,20 @@
 # javaee-servlet-train
 Little project to work with Java 8, Java EE, Hibernate, Jackson and TomCat
 
-To run the project add credentials to your PSQL in `persistence.xml` db and create user table
+To run the project add credentials to your PSQL in `persistence.xml` db and create three tables
+
+`
+CREATE TABLE COUNTRIES  (
+id SERIAL PRIMARY KEY,
+country_name VARCHAR(255) NOT NULL
+);
+`
+
+`CREATE TABLE CITIES (
+id SERIAL PRIMARY KEY,
+city_name VARCHAR(255) NOT NULL,
+country_id INT REFERENCES Countries(id)
+);`
 
 `
 CREATE TABLE USERS (

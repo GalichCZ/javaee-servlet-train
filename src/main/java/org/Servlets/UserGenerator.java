@@ -1,15 +1,15 @@
 package org.Servlets;
 import org.DTO.UserDto;
 import org.Provider.JsonProvider;
-import org.Services.UserServiceImpl;
-import org.Utils.ErrorHandler;
-import org.Utils.RandomUsersGetter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import static org.Services.UserServiceImpl.writeAllUsersInDb;
+import static org.Utils.ErrorHandler.badRequest;
+import static org.Utils.RandomUsersGetter.getRandomUsersFromApi;
 
 @WebServlet(value = "/user-generator")
 public class UserGenerator extends HttpServlet {
@@ -17,22 +17,19 @@ public class UserGenerator extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         response.setContentType("application/json");
         try {
-            String randomUsersResponse = RandomUsersGetter.getRandomUsersFromApi();
+            String randomUsersResponse = getRandomUsersFromApi();
 
             if(randomUsersResponse.isEmpty()){
-                ErrorHandler.badRequest(response, "cannot get random users");
+                badRequest(response, "cannot get random users");
                 return;
             }
 
-            List<UserDto> userDtos = UserServiceImpl.writeAllUsersInDb(randomUsersResponse);
+            List<UserDto> userDtos = writeAllUsersInDb(randomUsersResponse);
 
             response.getWriter().write(JsonProvider.objectToString(userDtos));
         }
         catch (Exception e){
-            ErrorHandler.badRequest(response, e.getMessage());
+            badRequest(response, e.getMessage());
         }
-    }
-
-    public void destroy() {
     }
 }

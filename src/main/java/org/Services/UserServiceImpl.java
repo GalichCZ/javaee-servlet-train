@@ -1,17 +1,19 @@
 package org.Services;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.DTO.UserDto;
 import org.Entity.User;
-import org.Provider.EntityManagerProvider;
-import org.Provider.JsonProvider;
-import org.Utils.TreeReaderUtil;
-import org.Utils.UserDtoBuilder;
-
-import javax.persistence.EntityManager;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
+import static org.DBQuery.UserQuery.getAllUsers;
+import static org.DBQuery.UserQuery.getUserById;
+import static org.Provider.JsonProvider.readTree;
+import static org.Utils.TransactionsHandle.persistTransaction;
+import static org.Utils.TreeReaderUtil.readJsonTree;
+import static org.Utils.UserDtoBuilder.buildSpecificUserDto;
+import static org.Utils.UserDtoBuilder.buildUserDto;
 
 
 /*
@@ -19,39 +21,29 @@ import java.util.List;
     and use injections in all servlets where it needed to use
 */
 public class UserServiceImpl {
-    private static final EntityManager em = EntityManagerProvider.getEntityManager();
-
     public static List<UserDto> writeAllUsersInDb(String randomUsers){
         try {
-            JsonNode jsonTree = JsonProvider.readTree(randomUsers);
-            List<User> users = TreeReaderUtil.readJsonTree(jsonTree);
+            JsonNode jsonTree = readTree(randomUsers);
+            List<User> users = readJsonTree(jsonTree);
             List<UserDto> userDtos = new ArrayList<>();
 
-            em.getTransaction().begin();
             for (User user : users){
-                em.persist(user);
+                persistTransaction(user);
             }
 
-            em.getTransaction().commit();
-
             for (User user : users){
-                userDtos.add(UserDtoBuilder.buildUserDto(user));
+                userDtos.add(buildUserDto(user));
             }
 
             return userDtos;
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             return null;
         }
     }
 
     public static List<UserDto> getExactAmountOfUsers(int offset, int limit){
         try {
-            em.getTransaction().begin();
-
-            List<User> users = em.createQuery("SELECT u FROM User u", User.class)
-                    .setFirstResult(offset).setMaxResults(limit).getResultList();
-
-            em.getTransaction().commit();
+            List<User> users = getAllUsers(offset, limit);
 
             List<UserDto> userDtos = new ArrayList<>();
 
@@ -74,17 +66,13 @@ public class UserServiceImpl {
 
     public static UserDto getSpecificUser(String[] includedFields, long userId){
         try {
-            em.getTransaction().begin();
-
-            User user = em.find(User.class, userId);
-
-            em.getTransaction().commit();
+            User user = getUserById(userId);
 
             if (includedFields == null || includedFields[0].isEmpty()) {
-                return UserDtoBuilder.buildUserDto(user);
+                return buildUserDto(user);
             }
 
-            return UserDtoBuilder.buildSpecificUserDto(includedFields, user);
+            return buildSpecificUserDto(includedFields, user);
         }
         catch (Exception ex) {
             return null;
