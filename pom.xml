@@ -35,6 +35,17 @@
         <version>2.14.2</version>
       </dependency>
       <dependency>
+          <groupId>commons-beanutils</groupId>
+          <artifactId>commons-beanutils</artifactId>
+          <version>1.9.4</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>commons-collections</groupId>
+                  <artifactId>commons-collections</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+      <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>5.6.15.Final</version>

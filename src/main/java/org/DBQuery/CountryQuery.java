@@ -4,7 +4,7 @@ import org.Provider.EntityManagerProvider;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import static org.Utils.TransactionsHandle.persistTransaction;
+import static org.Utils.TransactionsHandler.persistTransaction;
 
 public class CountryQuery {
 

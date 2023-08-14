@@ -1,8 +1,14 @@
 package org.Utils;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import org.DTO.UserDto;
 import org.Entity.City;
 import org.Entity.Country;
 import org.Entity.User;
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class UserDtoBuilder {
     public static UserDto buildSpecificUserDto(String[] includedFields, User user){
@@ -12,6 +18,10 @@ public class UserDtoBuilder {
         City city = user.getCity();
         Country country = city.getCountry();
 
+        /*
+            These strings in case should be changed for reflection of class pole names in case of
+            continuously supporting this app. Possible runtime error - changed pole name like password to pswd
+        */
         for(String field : includedFields){
             switch (field){
                 case "username":
@@ -47,22 +57,16 @@ public class UserDtoBuilder {
         return userDto;
     }
 
-    public static UserDto buildUserDto(User user){
+    public static UserDto buildUserDto(User user) throws InvocationTargetException, IllegalAccessException {
         UserDto userDto = new UserDto();
 
         City city = user.getCity();
         Country country = city.getCountry();
 
-        userDto.setId(user.getId());
-        userDto.setUsername(user.getUsername());
-        userDto.setEmail(user.getEmail());
-        userDto.setName(user.getName());
-        userDto.setCell(user.getCell());
+        BeanUtils.copyProperties(userDto, user);
+
         userDto.setCity(city.getCityName());
         userDto.setCountry(country.getCountryName());
-        userDto.setGender(user.getGender());
-        userDto.setPassword(user.getPassword());
-        userDto.setPhone(user.getPhone());
 
         return userDto;
     }

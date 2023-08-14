@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import static org.Services.UserServiceImpl.writeAllUsersInDb;
 import static org.Utils.ErrorHandler.badRequest;
-import static org.Utils.RandomUsersGetter.getRandomUsersFromApi;
+import static org.Utils.RandomUsersUtils.getRandomUsersFromApi;
 
 @WebServlet(value = "/user-generator")
 public class UserGenerator extends HttpServlet {
