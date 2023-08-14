@@ -26,8 +26,7 @@ CREATE TABLE USERS (
     gender VARCHAR(10),
     phone VARCHAR(20),
     cell VARCHAR(20),
-    city VARCHAR(255),
-    country VARCHAR(255)
+    city_id INT REFERENCES Cities(id)
 );
 `
 
