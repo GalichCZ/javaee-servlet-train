@@ -3,6 +3,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.DTO.UserDto;
 import org.Entity.User;
+
+import java.lang.reflect.InvocationTargetException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
@@ -10,8 +12,8 @@ import java.util.List;
 import static org.DBQuery.UserQuery.getAllUsers;
 import static org.DBQuery.UserQuery.getUserById;
 import static org.Provider.JsonProvider.readTree;
-import static org.Utils.TransactionsHandle.persistTransaction;
-import static org.Utils.TreeReaderUtil.readJsonTree;
+import static org.Utils.RandomUsersUtils.readJsonTree;
+import static org.Utils.TransactionsHandler.persistTransaction;
 import static org.Utils.UserDtoBuilder.buildSpecificUserDto;
 import static org.Utils.UserDtoBuilder.buildUserDto;
 
@@ -36,7 +38,8 @@ public class UserServiceImpl {
             }
 
             return userDtos;
-        } catch (JsonProcessingException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (JsonProcessingException | NoSuchAlgorithmException | InvalidKeySpecException |
+                 InvocationTargetException | IllegalAccessException e) {
             return null;
         }
     }

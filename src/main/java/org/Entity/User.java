@@ -27,6 +27,7 @@ public class User {
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
 
+    public User() {}
 
     public long getId() {
         return id;
@@ -75,9 +76,5 @@ public class User {
         this.phone = phone;
         this.cell = cell;
         this.city = city;
-    }
-
-    public User() {
-
     }
 }
